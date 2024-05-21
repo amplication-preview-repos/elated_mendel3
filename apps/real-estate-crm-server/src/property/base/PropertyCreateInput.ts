@@ -9,5 +9,89 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class PropertyCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsNumber,
+  IsEnum,
+} from "class-validator";
+import { AgentWhereUniqueInput } from "../../agent/base/AgentWhereUniqueInput";
+import { Type } from "class-transformer";
+import { AppointmentCreateNestedManyWithoutPropertiesInput } from "./AppointmentCreateNestedManyWithoutPropertiesInput";
+import { EnumPropertyStatus } from "./EnumPropertyStatus";
+
+@InputType()
+class PropertyCreateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  address?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => AgentWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => AgentWhereUniqueInput)
+  @IsOptional()
+  @Field(() => AgentWhereUniqueInput, {
+    nullable: true,
+  })
+  agent?: AgentWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentCreateNestedManyWithoutPropertiesInput,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentCreateNestedManyWithoutPropertiesInput)
+  @IsOptional()
+  @Field(() => AppointmentCreateNestedManyWithoutPropertiesInput, {
+    nullable: true,
+  })
+  appointments?: AppointmentCreateNestedManyWithoutPropertiesInput;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  listingPrice?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumPropertyStatus,
+  })
+  @IsEnum(EnumPropertyStatus)
+  @IsOptional()
+  @Field(() => EnumPropertyStatus, {
+    nullable: true,
+  })
+  status?: "Option1" | null;
+}
+
 export { PropertyCreateInput as PropertyCreateInput };

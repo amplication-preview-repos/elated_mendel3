@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { PropertyModule } from "./property/property.module";
 import { ClientModule } from "./client/client.module";
+import { PropertyModule } from "./property/property.module";
 import { AgentModule } from "./agent/agent.module";
 import { AppointmentModule } from "./appointment/appointment.module";
 import { HealthModule } from "./health/health.module";
@@ -15,8 +15,8 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 @Module({
   controllers: [],
   imports: [
-    PropertyModule,
     ClientModule,
+    PropertyModule,
     AgentModule,
     AppointmentModule,
     HealthModule,

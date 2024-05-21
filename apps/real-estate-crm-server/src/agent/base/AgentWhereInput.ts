@@ -11,12 +11,49 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import { AppointmentListRelationFilter } from "../../appointment/base/AppointmentListRelationFilter";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { StringFilter } from "../../util/StringFilter";
+import { PropertyListRelationFilter } from "../../property/base/PropertyListRelationFilter";
 
 @InputType()
 class AgentWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentListRelationFilter)
+  @IsOptional()
+  @Field(() => AppointmentListRelationFilter, {
+    nullable: true,
+  })
+  appointments?: AppointmentListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  email?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  firstName?: StringNullableFilter;
+
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -27,6 +64,40 @@ class AgentWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  lastName?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  phoneNumber?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => PropertyListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => PropertyListRelationFilter)
+  @IsOptional()
+  @Field(() => PropertyListRelationFilter, {
+    nullable: true,
+  })
+  properties?: PropertyListRelationFilter;
 }
 
 export { AgentWhereInput as AgentWhereInput };

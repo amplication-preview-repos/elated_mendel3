@@ -18,25 +18,37 @@ import { PropertyService } from "../property.service";
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
+  address: "exampleAddress",
   createdAt: new Date(),
   id: "exampleId",
+  listingPrice: 42.42,
+  name: "exampleName",
   updatedAt: new Date(),
 };
 const CREATE_RESULT = {
+  address: "exampleAddress",
   createdAt: new Date(),
   id: "exampleId",
+  listingPrice: 42.42,
+  name: "exampleName",
   updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
+    address: "exampleAddress",
     createdAt: new Date(),
     id: "exampleId",
+    listingPrice: 42.42,
+    name: "exampleName",
     updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
+  address: "exampleAddress",
   createdAt: new Date(),
   id: "exampleId",
+  listingPrice: 42.42,
+  name: "exampleName",
   updatedAt: new Date(),
 };
 

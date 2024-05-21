@@ -5,14 +5,14 @@ import { theme } from "./theme/theme";
 import Login from "./Login";
 import "./App.scss";
 import Dashboard from "./pages/Dashboard";
-import { PropertyList } from "./property/PropertyList";
-import { PropertyCreate } from "./property/PropertyCreate";
-import { PropertyEdit } from "./property/PropertyEdit";
-import { PropertyShow } from "./property/PropertyShow";
 import { ClientList } from "./client/ClientList";
 import { ClientCreate } from "./client/ClientCreate";
 import { ClientEdit } from "./client/ClientEdit";
 import { ClientShow } from "./client/ClientShow";
+import { PropertyList } from "./property/PropertyList";
+import { PropertyCreate } from "./property/PropertyCreate";
+import { PropertyEdit } from "./property/PropertyEdit";
+import { PropertyShow } from "./property/PropertyShow";
 import { AgentList } from "./agent/AgentList";
 import { AgentCreate } from "./agent/AgentCreate";
 import { AgentEdit } from "./agent/AgentEdit";
@@ -48,18 +48,18 @@ const App = (): React.ReactElement => {
         loginPage={Login}
       >
         <Resource
-          name="Property"
-          list={PropertyList}
-          edit={PropertyEdit}
-          create={PropertyCreate}
-          show={PropertyShow}
-        />
-        <Resource
           name="Client"
           list={ClientList}
           edit={ClientEdit}
           create={ClientCreate}
           show={ClientShow}
+        />
+        <Resource
+          name="Property"
+          list={PropertyList}
+          edit={PropertyEdit}
+          create={PropertyCreate}
+          show={PropertyShow}
         />
         <Resource
           name="Agent"

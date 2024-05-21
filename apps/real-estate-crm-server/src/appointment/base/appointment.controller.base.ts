@@ -31,10 +31,51 @@ export class AppointmentControllerBase {
     @common.Body() data: AppointmentCreateInput
   ): Promise<Appointment> {
     return await this.service.createAppointment({
-      data: data,
+      data: {
+        ...data,
+
+        agent: data.agent
+          ? {
+              connect: data.agent,
+            }
+          : undefined,
+
+        client: data.client
+          ? {
+              connect: data.client,
+            }
+          : undefined,
+
+        property: data.property
+          ? {
+              connect: data.property,
+            }
+          : undefined,
+      },
       select: {
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
+        client: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        date: true,
         id: true,
+
+        property: {
+          select: {
+            id: true,
+          },
+        },
+
+        time: true,
         updatedAt: true,
       },
     });
@@ -48,8 +89,29 @@ export class AppointmentControllerBase {
     return this.service.appointments({
       ...args,
       select: {
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
+        client: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        date: true,
         id: true,
+
+        property: {
+          select: {
+            id: true,
+          },
+        },
+
+        time: true,
         updatedAt: true,
       },
     });
@@ -64,8 +126,29 @@ export class AppointmentControllerBase {
     const result = await this.service.appointment({
       where: params,
       select: {
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
+        client: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
+        date: true,
         id: true,
+
+        property: {
+          select: {
+            id: true,
+          },
+        },
+
+        time: true,
         updatedAt: true,
       },
     });
@@ -87,10 +170,51 @@ export class AppointmentControllerBase {
     try {
       return await this.service.updateAppointment({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          agent: data.agent
+            ? {
+                connect: data.agent,
+              }
+            : undefined,
+
+          client: data.client
+            ? {
+                connect: data.client,
+              }
+            : undefined,
+
+          property: data.property
+            ? {
+                connect: data.property,
+              }
+            : undefined,
+        },
         select: {
+          agent: {
+            select: {
+              id: true,
+            },
+          },
+
+          client: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
+          date: true,
           id: true,
+
+          property: {
+            select: {
+              id: true,
+            },
+          },
+
+          time: true,
           updatedAt: true,
         },
       });
@@ -114,8 +238,29 @@ export class AppointmentControllerBase {
       return await this.service.deleteAppointment({
         where: params,
         select: {
+          agent: {
+            select: {
+              id: true,
+            },
+          },
+
+          client: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
+          date: true,
           id: true,
+
+          property: {
+            select: {
+              id: true,
+            },
+          },
+
+          time: true,
           updatedAt: true,
         },
       });

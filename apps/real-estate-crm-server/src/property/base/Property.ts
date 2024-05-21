@@ -11,11 +11,50 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsDate,
+  IsNumber,
+  IsEnum,
+} from "class-validator";
+import { Agent } from "../../agent/base/Agent";
 import { Type } from "class-transformer";
+import { Appointment } from "../../appointment/base/Appointment";
+import { EnumPropertyStatus } from "./EnumPropertyStatus";
 
 @ObjectType()
 class Property {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  address!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Agent,
+  })
+  @ValidateNested()
+  @Type(() => Agent)
+  @IsOptional()
+  agent?: Agent | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Appointment],
+  })
+  @ValidateNested()
+  @Type(() => Appointment)
+  @IsOptional()
+  appointments?: Array<Appointment>;
+
   @ApiProperty({
     required: true,
   })
@@ -31,6 +70,39 @@ class Property {
   @IsString()
   @Field(() => String)
   id!: string;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  listingPrice!: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name!: string | null;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumPropertyStatus,
+  })
+  @IsEnum(EnumPropertyStatus)
+  @IsOptional()
+  @Field(() => EnumPropertyStatus, {
+    nullable: true,
+  })
+  status?: "Option1" | null;
 
   @ApiProperty({
     required: true,

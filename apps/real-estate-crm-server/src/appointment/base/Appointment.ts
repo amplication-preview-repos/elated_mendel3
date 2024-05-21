@@ -11,11 +11,32 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString } from "class-validator";
+import { Agent } from "../../agent/base/Agent";
+import { ValidateNested, IsOptional, IsDate, IsString } from "class-validator";
 import { Type } from "class-transformer";
+import { Client } from "../../client/base/Client";
+import { Property } from "../../property/base/Property";
 
 @ObjectType()
 class Appointment {
+  @ApiProperty({
+    required: false,
+    type: () => Agent,
+  })
+  @ValidateNested()
+  @Type(() => Agent)
+  @IsOptional()
+  agent?: Agent | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => Client,
+  })
+  @ValidateNested()
+  @Type(() => Client)
+  @IsOptional()
+  client?: Client | null;
+
   @ApiProperty({
     required: true,
   })
@@ -25,12 +46,43 @@ class Appointment {
   createdAt!: Date;
 
   @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  date!: Date | null;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
   @IsString()
   @Field(() => String)
   id!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => Property,
+  })
+  @ValidateNested()
+  @Type(() => Property)
+  @IsOptional()
+  property?: Property | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  time!: Date | null;
 
   @ApiProperty({
     required: true,

@@ -11,12 +11,52 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringFilter } from "../../util/StringFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested, IsEnum } from "class-validator";
+import { AgentWhereUniqueInput } from "../../agent/base/AgentWhereUniqueInput";
+import { AppointmentListRelationFilter } from "../../appointment/base/AppointmentListRelationFilter";
+import { StringFilter } from "../../util/StringFilter";
+import { FloatNullableFilter } from "../../util/FloatNullableFilter";
+import { EnumPropertyStatus } from "./EnumPropertyStatus";
 
 @InputType()
 class PropertyWhereInput {
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  address?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => AgentWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => AgentWhereUniqueInput)
+  @IsOptional()
+  @Field(() => AgentWhereUniqueInput, {
+    nullable: true,
+  })
+  agent?: AgentWhereUniqueInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentListRelationFilter)
+  @IsOptional()
+  @Field(() => AppointmentListRelationFilter, {
+    nullable: true,
+  })
+  appointments?: AppointmentListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: StringFilter,
@@ -27,6 +67,39 @@ class PropertyWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: FloatNullableFilter,
+  })
+  @Type(() => FloatNullableFilter)
+  @IsOptional()
+  @Field(() => FloatNullableFilter, {
+    nullable: true,
+  })
+  listingPrice?: FloatNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: StringNullableFilter,
+  })
+  @Type(() => StringNullableFilter)
+  @IsOptional()
+  @Field(() => StringNullableFilter, {
+    nullable: true,
+  })
+  name?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumPropertyStatus,
+  })
+  @IsEnum(EnumPropertyStatus)
+  @IsOptional()
+  @Field(() => EnumPropertyStatus, {
+    nullable: true,
+  })
+  status?: "Option1";
 }
 
 export { PropertyWhereInput as PropertyWhereInput };

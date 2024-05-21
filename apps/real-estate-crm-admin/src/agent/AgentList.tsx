@@ -13,7 +13,11 @@ export const AgentList = (props: ListProps): React.ReactElement => {
     >
       <Datagrid rowClick="show">
         <DateField source="createdAt" label="Created At" />
+        <TextField label="Email" source="email" />
+        <TextField label="FirstName" source="firstName" />
         <TextField label="ID" source="id" />
+        <TextField label="LastName" source="lastName" />
+        <TextField label="PhoneNumber" source="phoneNumber" />
         <DateField source="updatedAt" label="Updated At" />
       </Datagrid>
     </List>

@@ -9,5 +9,73 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class AppointmentUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { AgentWhereUniqueInput } from "../../agent/base/AgentWhereUniqueInput";
+import { ValidateNested, IsOptional, IsDate } from "class-validator";
+import { Type } from "class-transformer";
+import { ClientWhereUniqueInput } from "../../client/base/ClientWhereUniqueInput";
+import { PropertyWhereUniqueInput } from "../../property/base/PropertyWhereUniqueInput";
+
+@InputType()
+class AppointmentUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => AgentWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => AgentWhereUniqueInput)
+  @IsOptional()
+  @Field(() => AgentWhereUniqueInput, {
+    nullable: true,
+  })
+  agent?: AgentWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ClientWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ClientWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ClientWhereUniqueInput, {
+    nullable: true,
+  })
+  client?: ClientWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  date?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => PropertyWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => PropertyWhereUniqueInput)
+  @IsOptional()
+  @Field(() => PropertyWhereUniqueInput, {
+    nullable: true,
+  })
+  property?: PropertyWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+  })
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  @Field(() => Date, {
+    nullable: true,
+  })
+  time?: Date | null;
+}
+
 export { AppointmentUpdateInput as AppointmentUpdateInput };

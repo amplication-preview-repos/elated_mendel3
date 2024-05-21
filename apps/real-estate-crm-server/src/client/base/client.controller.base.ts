@@ -22,6 +22,9 @@ import { Client } from "./Client";
 import { ClientFindManyArgs } from "./ClientFindManyArgs";
 import { ClientWhereUniqueInput } from "./ClientWhereUniqueInput";
 import { ClientUpdateInput } from "./ClientUpdateInput";
+import { AppointmentFindManyArgs } from "../../appointment/base/AppointmentFindManyArgs";
+import { Appointment } from "../../appointment/base/Appointment";
+import { AppointmentWhereUniqueInput } from "../../appointment/base/AppointmentWhereUniqueInput";
 
 export class ClientControllerBase {
   constructor(protected readonly service: ClientService) {}
@@ -32,7 +35,11 @@ export class ClientControllerBase {
       data: data,
       select: {
         createdAt: true,
+        email: true,
+        firstName: true,
         id: true,
+        lastName: true,
+        phoneNumber: true,
         updatedAt: true,
       },
     });
@@ -47,7 +54,11 @@ export class ClientControllerBase {
       ...args,
       select: {
         createdAt: true,
+        email: true,
+        firstName: true,
         id: true,
+        lastName: true,
+        phoneNumber: true,
         updatedAt: true,
       },
     });
@@ -63,7 +74,11 @@ export class ClientControllerBase {
       where: params,
       select: {
         createdAt: true,
+        email: true,
+        firstName: true,
         id: true,
+        lastName: true,
+        phoneNumber: true,
         updatedAt: true,
       },
     });
@@ -88,7 +103,11 @@ export class ClientControllerBase {
         data: data,
         select: {
           createdAt: true,
+          email: true,
+          firstName: true,
           id: true,
+          lastName: true,
+          phoneNumber: true,
           updatedAt: true,
         },
       });
@@ -113,7 +132,11 @@ export class ClientControllerBase {
         where: params,
         select: {
           createdAt: true,
+          email: true,
+          firstName: true,
           id: true,
+          lastName: true,
+          phoneNumber: true,
           updatedAt: true,
         },
       });
@@ -125,5 +148,100 @@ export class ClientControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/appointments")
+  @ApiNestedQuery(AppointmentFindManyArgs)
+  async findAppointments(
+    @common.Req() request: Request,
+    @common.Param() params: ClientWhereUniqueInput
+  ): Promise<Appointment[]> {
+    const query = plainToClass(AppointmentFindManyArgs, request.query);
+    const results = await this.service.findAppointments(params.id, {
+      ...query,
+      select: {
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
+        client: {
+          select: {
+            id: true,
+          },
+        },
+
+        createdAt: true,
+        date: true,
+        id: true,
+
+        property: {
+          select: {
+            id: true,
+          },
+        },
+
+        time: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/appointments")
+  async connectAppointments(
+    @common.Param() params: ClientWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        connect: body,
+      },
+    };
+    await this.service.updateClient({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/appointments")
+  async updateAppointments(
+    @common.Param() params: ClientWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        set: body,
+      },
+    };
+    await this.service.updateClient({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/appointments")
+  async disconnectAppointments(
+    @common.Param() params: ClientWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateClient({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

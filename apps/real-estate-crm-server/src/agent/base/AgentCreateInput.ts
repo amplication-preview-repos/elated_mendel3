@@ -9,5 +9,82 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class AgentCreateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { AppointmentCreateNestedManyWithoutAgentsInput } from "./AppointmentCreateNestedManyWithoutAgentsInput";
+import { ValidateNested, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { PropertyCreateNestedManyWithoutAgentsInput } from "./PropertyCreateNestedManyWithoutAgentsInput";
+
+@InputType()
+class AgentCreateInput {
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentCreateNestedManyWithoutAgentsInput,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentCreateNestedManyWithoutAgentsInput)
+  @IsOptional()
+  @Field(() => AppointmentCreateNestedManyWithoutAgentsInput, {
+    nullable: true,
+  })
+  appointments?: AppointmentCreateNestedManyWithoutAgentsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  email?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  firstName?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  lastName?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  phoneNumber?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => PropertyCreateNestedManyWithoutAgentsInput,
+  })
+  @ValidateNested()
+  @Type(() => PropertyCreateNestedManyWithoutAgentsInput)
+  @IsOptional()
+  @Field(() => PropertyCreateNestedManyWithoutAgentsInput, {
+    nullable: true,
+  })
+  properties?: PropertyCreateNestedManyWithoutAgentsInput;
+}
+
 export { AgentCreateInput as AgentCreateInput };

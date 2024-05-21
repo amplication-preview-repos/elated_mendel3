@@ -17,7 +17,12 @@ import { Appointment } from "./Appointment";
 import { AppointmentCountArgs } from "./AppointmentCountArgs";
 import { AppointmentFindManyArgs } from "./AppointmentFindManyArgs";
 import { AppointmentFindUniqueArgs } from "./AppointmentFindUniqueArgs";
+import { CreateAppointmentArgs } from "./CreateAppointmentArgs";
+import { UpdateAppointmentArgs } from "./UpdateAppointmentArgs";
 import { DeleteAppointmentArgs } from "./DeleteAppointmentArgs";
+import { Agent } from "../../agent/base/Agent";
+import { Client } from "../../client/base/Client";
+import { Property } from "../../property/base/Property";
 import { AppointmentService } from "../appointment.service";
 @graphql.Resolver(() => Appointment)
 export class AppointmentResolverBase {
@@ -51,6 +56,75 @@ export class AppointmentResolverBase {
   }
 
   @graphql.Mutation(() => Appointment)
+  async createAppointment(
+    @graphql.Args() args: CreateAppointmentArgs
+  ): Promise<Appointment> {
+    return await this.service.createAppointment({
+      ...args,
+      data: {
+        ...args.data,
+
+        agent: args.data.agent
+          ? {
+              connect: args.data.agent,
+            }
+          : undefined,
+
+        client: args.data.client
+          ? {
+              connect: args.data.client,
+            }
+          : undefined,
+
+        property: args.data.property
+          ? {
+              connect: args.data.property,
+            }
+          : undefined,
+      },
+    });
+  }
+
+  @graphql.Mutation(() => Appointment)
+  async updateAppointment(
+    @graphql.Args() args: UpdateAppointmentArgs
+  ): Promise<Appointment | null> {
+    try {
+      return await this.service.updateAppointment({
+        ...args,
+        data: {
+          ...args.data,
+
+          agent: args.data.agent
+            ? {
+                connect: args.data.agent,
+              }
+            : undefined,
+
+          client: args.data.client
+            ? {
+                connect: args.data.client,
+              }
+            : undefined,
+
+          property: args.data.property
+            ? {
+                connect: args.data.property,
+              }
+            : undefined,
+        },
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Appointment)
   async deleteAppointment(
     @graphql.Args() args: DeleteAppointmentArgs
   ): Promise<Appointment | null> {
@@ -64,5 +138,48 @@ export class AppointmentResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => Agent, {
+    nullable: true,
+    name: "agent",
+  })
+  async getAgent(@graphql.Parent() parent: Appointment): Promise<Agent | null> {
+    const result = await this.service.getAgent(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
+  @graphql.ResolveField(() => Client, {
+    nullable: true,
+    name: "client",
+  })
+  async getClient(
+    @graphql.Parent() parent: Appointment
+  ): Promise<Client | null> {
+    const result = await this.service.getClient(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  }
+
+  @graphql.ResolveField(() => Property, {
+    nullable: true,
+    name: "property",
+  })
+  async getProperty(
+    @graphql.Parent() parent: Appointment
+  ): Promise<Property | null> {
+    const result = await this.service.getProperty(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

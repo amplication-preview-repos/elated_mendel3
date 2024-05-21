@@ -17,7 +17,13 @@ import { Agent } from "./Agent";
 import { AgentCountArgs } from "./AgentCountArgs";
 import { AgentFindManyArgs } from "./AgentFindManyArgs";
 import { AgentFindUniqueArgs } from "./AgentFindUniqueArgs";
+import { CreateAgentArgs } from "./CreateAgentArgs";
+import { UpdateAgentArgs } from "./UpdateAgentArgs";
 import { DeleteAgentArgs } from "./DeleteAgentArgs";
+import { AppointmentFindManyArgs } from "../../appointment/base/AppointmentFindManyArgs";
+import { Appointment } from "../../appointment/base/Appointment";
+import { PropertyFindManyArgs } from "../../property/base/PropertyFindManyArgs";
+import { Property } from "../../property/base/Property";
 import { AgentService } from "../agent.service";
 @graphql.Resolver(() => Agent)
 export class AgentResolverBase {
@@ -49,6 +55,33 @@ export class AgentResolverBase {
   }
 
   @graphql.Mutation(() => Agent)
+  async createAgent(@graphql.Args() args: CreateAgentArgs): Promise<Agent> {
+    return await this.service.createAgent({
+      ...args,
+      data: args.data,
+    });
+  }
+
+  @graphql.Mutation(() => Agent)
+  async updateAgent(
+    @graphql.Args() args: UpdateAgentArgs
+  ): Promise<Agent | null> {
+    try {
+      return await this.service.updateAgent({
+        ...args,
+        data: args.data,
+      });
+    } catch (error) {
+      if (isRecordNotFoundError(error)) {
+        throw new GraphQLError(
+          `No resource was found for ${JSON.stringify(args.where)}`
+        );
+      }
+      throw error;
+    }
+  }
+
+  @graphql.Mutation(() => Agent)
   async deleteAgent(
     @graphql.Args() args: DeleteAgentArgs
   ): Promise<Agent | null> {
@@ -62,5 +95,33 @@ export class AgentResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Appointment], { name: "appointments" })
+  async findAppointments(
+    @graphql.Parent() parent: Agent,
+    @graphql.Args() args: AppointmentFindManyArgs
+  ): Promise<Appointment[]> {
+    const results = await this.service.findAppointments(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @graphql.ResolveField(() => [Property], { name: "properties" })
+  async findProperties(
+    @graphql.Parent() parent: Agent,
+    @graphql.Args() args: PropertyFindManyArgs
+  ): Promise<Property[]> {
+    const results = await this.service.findProperties(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 }

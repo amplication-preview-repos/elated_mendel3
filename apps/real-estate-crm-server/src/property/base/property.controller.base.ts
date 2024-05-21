@@ -22,6 +22,9 @@ import { Property } from "./Property";
 import { PropertyFindManyArgs } from "./PropertyFindManyArgs";
 import { PropertyWhereUniqueInput } from "./PropertyWhereUniqueInput";
 import { PropertyUpdateInput } from "./PropertyUpdateInput";
+import { AppointmentFindManyArgs } from "../../appointment/base/AppointmentFindManyArgs";
+import { Appointment } from "../../appointment/base/Appointment";
+import { AppointmentWhereUniqueInput } from "../../appointment/base/AppointmentWhereUniqueInput";
 
 export class PropertyControllerBase {
   constructor(protected readonly service: PropertyService) {}
@@ -31,10 +34,29 @@ export class PropertyControllerBase {
     @common.Body() data: PropertyCreateInput
   ): Promise<Property> {
     return await this.service.createProperty({
-      data: data,
+      data: {
+        ...data,
+
+        agent: data.agent
+          ? {
+              connect: data.agent,
+            }
+          : undefined,
+      },
       select: {
+        address: true,
+
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
+        listingPrice: true,
+        name: true,
+        status: true,
         updatedAt: true,
       },
     });
@@ -48,8 +70,19 @@ export class PropertyControllerBase {
     return this.service.properties({
       ...args,
       select: {
+        address: true,
+
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
+        listingPrice: true,
+        name: true,
+        status: true,
         updatedAt: true,
       },
     });
@@ -64,8 +97,19 @@ export class PropertyControllerBase {
     const result = await this.service.property({
       where: params,
       select: {
+        address: true,
+
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
         createdAt: true,
         id: true,
+        listingPrice: true,
+        name: true,
+        status: true,
         updatedAt: true,
       },
     });
@@ -87,10 +131,29 @@ export class PropertyControllerBase {
     try {
       return await this.service.updateProperty({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          agent: data.agent
+            ? {
+                connect: data.agent,
+              }
+            : undefined,
+        },
         select: {
+          address: true,
+
+          agent: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           id: true,
+          listingPrice: true,
+          name: true,
+          status: true,
           updatedAt: true,
         },
       });
@@ -114,8 +177,19 @@ export class PropertyControllerBase {
       return await this.service.deleteProperty({
         where: params,
         select: {
+          address: true,
+
+          agent: {
+            select: {
+              id: true,
+            },
+          },
+
           createdAt: true,
           id: true,
+          listingPrice: true,
+          name: true,
+          status: true,
           updatedAt: true,
         },
       });
@@ -127,5 +201,100 @@ export class PropertyControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/appointments")
+  @ApiNestedQuery(AppointmentFindManyArgs)
+  async findAppointments(
+    @common.Req() request: Request,
+    @common.Param() params: PropertyWhereUniqueInput
+  ): Promise<Appointment[]> {
+    const query = plainToClass(AppointmentFindManyArgs, request.query);
+    const results = await this.service.findAppointments(params.id, {
+      ...query,
+      select: {
+        agent: {
+          select: {
+            id: true,
+          },
+        },
+
+        client: {
+          select: {
+            id: true,
+          },
+        },
+
+        createdAt: true,
+        date: true,
+        id: true,
+
+        property: {
+          select: {
+            id: true,
+          },
+        },
+
+        time: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/appointments")
+  async connectAppointments(
+    @common.Param() params: PropertyWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        connect: body,
+      },
+    };
+    await this.service.updateProperty({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/appointments")
+  async updateAppointments(
+    @common.Param() params: PropertyWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        set: body,
+      },
+    };
+    await this.service.updateProperty({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/appointments")
+  async disconnectAppointments(
+    @common.Param() params: PropertyWhereUniqueInput,
+    @common.Body() body: AppointmentWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      appointments: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateProperty({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

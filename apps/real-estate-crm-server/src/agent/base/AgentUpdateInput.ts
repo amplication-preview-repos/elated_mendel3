@@ -9,5 +9,82 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class AgentUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import { AppointmentUpdateManyWithoutAgentsInput } from "./AppointmentUpdateManyWithoutAgentsInput";
+import { ValidateNested, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { PropertyUpdateManyWithoutAgentsInput } from "./PropertyUpdateManyWithoutAgentsInput";
+
+@InputType()
+class AgentUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentUpdateManyWithoutAgentsInput,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentUpdateManyWithoutAgentsInput)
+  @IsOptional()
+  @Field(() => AppointmentUpdateManyWithoutAgentsInput, {
+    nullable: true,
+  })
+  appointments?: AppointmentUpdateManyWithoutAgentsInput;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  email?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  firstName?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  lastName?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  phoneNumber?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => PropertyUpdateManyWithoutAgentsInput,
+  })
+  @ValidateNested()
+  @Type(() => PropertyUpdateManyWithoutAgentsInput)
+  @IsOptional()
+  @Field(() => PropertyUpdateManyWithoutAgentsInput, {
+    nullable: true,
+  })
+  properties?: PropertyUpdateManyWithoutAgentsInput;
+}
+
 export { AgentUpdateInput as AgentUpdateInput };

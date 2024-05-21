@@ -9,5 +9,89 @@ https://docs.amplication.com/how-to/custom-code
 
 ------------------------------------------------------------------------------
   */
-class PropertyUpdateInput {}
+import { InputType, Field } from "@nestjs/graphql";
+import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsNumber,
+  IsEnum,
+} from "class-validator";
+import { AgentWhereUniqueInput } from "../../agent/base/AgentWhereUniqueInput";
+import { Type } from "class-transformer";
+import { AppointmentUpdateManyWithoutPropertiesInput } from "./AppointmentUpdateManyWithoutPropertiesInput";
+import { EnumPropertyStatus } from "./EnumPropertyStatus";
+
+@InputType()
+class PropertyUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  address?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => AgentWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => AgentWhereUniqueInput)
+  @IsOptional()
+  @Field(() => AgentWhereUniqueInput, {
+    nullable: true,
+  })
+  agent?: AgentWhereUniqueInput | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => AppointmentUpdateManyWithoutPropertiesInput,
+  })
+  @ValidateNested()
+  @Type(() => AppointmentUpdateManyWithoutPropertiesInput)
+  @IsOptional()
+  @Field(() => AppointmentUpdateManyWithoutPropertiesInput, {
+    nullable: true,
+  })
+  appointments?: AppointmentUpdateManyWithoutPropertiesInput;
+
+  @ApiProperty({
+    required: false,
+    type: Number,
+  })
+  @IsNumber()
+  @IsOptional()
+  @Field(() => Number, {
+    nullable: true,
+  })
+  listingPrice?: number | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
+  name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    enum: EnumPropertyStatus,
+  })
+  @IsEnum(EnumPropertyStatus)
+  @IsOptional()
+  @Field(() => EnumPropertyStatus, {
+    nullable: true,
+  })
+  status?: "Option1" | null;
+}
+
 export { PropertyUpdateInput as PropertyUpdateInput };
